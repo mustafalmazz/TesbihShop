@@ -1554,3 +1554,24 @@ h1, h2, h3, h4, h5, h6, .serif {
 .pdp-arrow:hover { background-color: white; transform: translateY(-50%) scale(1.05); }
 .pdp-arrow.left { left: 10px; }
 .pdp-arrow.right { right: 10px; }
+
+/* Checkout Page Styles */
+.checkout-layout { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start; }
+.checkout-card { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+.checkout-card-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.8rem; }
+.summary-sticky { position: sticky; top: 100px; }
+.payment-method-box { border: 1px solid #ddd; border-radius: 6px; padding: 1rem; cursor: pointer; transition: all 0.2s; }
+.payment-method-box.selected { border-color: #28a745; background-color: #f8fff9; }
+.radio-circle { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; }
+.radio-circle.active { border-color: #28a745; }
+.radio-circle.active::after { content: ''; width: 10px; height: 10px; background-color: #28a745; border-radius: 50%; }
+.checkout-items { margin-bottom: 1.5rem; }
+.checkout-item { display: flex; gap: 1rem; padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; }
+.checkout-item-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; background-color: #f9f9f9; }
+.checkout-item-info { flex: 1; }
+.checkout-item-title { font-size: 0.95rem; font-weight: 500; color: #333; margin-bottom: 0.5rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.checkout-item-price-qty { display: flex; justify-content: space-between; font-size: 0.85rem; color: #666; }
+.checkout-totals { background-color: #f9f9f9; border-radius: 6px; padding: 1rem; margin-bottom: 1.5rem; }
+.checkout-total-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem; color: #555; }
+.checkout-total-row.final-total { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #ddd; font-size: 1.1rem; font-weight: 600; color: #333; }
+@media (max-width: 991px) { .checkout-layout { grid-template-columns: 1fr; } }

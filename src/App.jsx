@@ -3,7 +3,7 @@ import {
   Menu, ShoppingCart, Truck, RefreshCcw, 
   CreditCard, ShieldCheck, X, CheckCircle,
   Star, Quote, Phone, Mail, MapPin, ChevronRight,
-  Plus, Minus, ArrowDownAZ, Filter, ChevronDown, Search
+  Plus, Minus, ArrowDownAZ, Filter, ChevronDown, Search, User
 } from 'lucide-react';
 
 const ToggleSwitch = ({ checked, onChange }) => (
@@ -253,6 +253,11 @@ function App() {
       alert("Sepetiniz boş!");
       return;
     }
+
+    if (!form.name || !form.phone || !form.address) {
+      alert("Lütfen tüm zorunlu alanları (Ad, Telefon, Adres) eksiksiz doldurunuz.");
+      return;
+    }
     
     // Format WhatsApp Message
     let message = `Merhaba, sipariş vermek istiyorum.%0A%0A`;
@@ -386,6 +391,96 @@ function App() {
                     <summary>Güvenli Ödeme</summary>
                     <p>256-bit SSL sertifikası ile korunan ödeme altyapımız ile güvenle alışveriş yapabilirsiniz. Kapıda ödeme seçeneğimiz de mevcuttur.</p>
                   </details>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : currentView === 'checkout' ? (
+        <div className="checkout-page" style={{backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '2rem 0 4rem 0'}}>
+          <div className="container">
+            <div className="mb-4" style={{fontSize: '0.85rem', color: '#666'}}>
+              <span onClick={() => setCurrentView('home')} style={{cursor: 'pointer', color: '#e01a22'}}>⌂ Anasayfa</span> &gt; Ödeme ve Sipariş
+            </div>
+            
+            <h1 style={{fontFamily: "'Playfair Display', serif", fontSize: '2rem', marginBottom: '2rem', color: '#111'}}>Siparişi Tamamla</h1>
+            
+            <div className="checkout-layout">
+              <div className="checkout-form-section">
+                <div className="checkout-card">
+                  <h2 className="checkout-card-title"><User size={20} /> İletişim Bilgileri</h2>
+                  <div className="form-group">
+                    <label>Adınız Soyadınız *</label>
+                    <input type="text" name="name" className="form-control" placeholder="Örn: Ahmet Yılmaz" required value={form.name} onChange={handleInputChange} />
+                  </div>
+                  <div className="form-group">
+                    <label>Telefon Numaranız *</label>
+                    <input type="tel" name="phone" className="form-control" placeholder="05XX XXX XX XX" required value={form.phone} onChange={handleInputChange} />
+                  </div>
+                </div>
+                
+                <div className="checkout-card mt-4">
+                  <h2 className="checkout-card-title"><MapPin size={20} /> Teslimat Adresi</h2>
+                  <div className="form-group">
+                    <label>Açık Adresiniz *</label>
+                    <textarea name="address" className="form-control" rows="3" placeholder="Mahalle, sokak, bina no, ilçe ve il bilgisi giriniz." required value={form.address} onChange={handleInputChange}></textarea>
+                  </div>
+                </div>
+                
+                <div className="checkout-card mt-4">
+                  <h2 className="checkout-card-title"><CreditCard size={20} /> Ödeme Yöntemi</h2>
+                  <div className="payment-method-box selected">
+                    <div className="flex items-center gap-3">
+                      <div className="radio-circle active"></div>
+                      <span style={{fontWeight: '600'}}>WhatsApp ile Sipariş (Havale/EFT - Kapıda Ödeme)</span>
+                    </div>
+                    <p style={{fontSize: '0.85rem', color: '#666', marginTop: '0.5rem', marginLeft: '2rem'}}>
+                      Siparişiniz WhatsApp üzerinden müşteri temsilcimize iletilecektir. Ödeme detaylarını ve kargo sürecini oradan onaylayabilirsiniz.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="checkout-summary-section">
+                <div className="checkout-card summary-sticky">
+                  <h2 className="checkout-card-title"><ShoppingCart size={20} /> Sipariş Özeti</h2>
+                  
+                  <div className="checkout-items">
+                    {cart.map(item => (
+                      <div key={item.id} className="checkout-item">
+                        <img src={item.image} alt={item.title} className="checkout-item-img" />
+                        <div className="checkout-item-info">
+                          <h4 className="checkout-item-title">{item.title}</h4>
+                          <div className="checkout-item-price-qty">
+                            <span>{item.qty} Adet</span>
+                            <span className="font-bold">{item.price * item.qty} TL</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="checkout-totals">
+                    <div className="checkout-total-row">
+                      <span>Ara Toplam</span>
+                      <span>{cartTotal} TL</span>
+                    </div>
+                    <div className="checkout-total-row">
+                      <span>Kargo Ücreti</span>
+                      <span style={{color: '#28a745'}}>Ücretsiz</span>
+                    </div>
+                    <div className="checkout-total-row final-total">
+                      <span>Ödenecek Tutar</span>
+                      <span className="text-gold" style={{fontWeight: '700', fontSize: '1.2rem'}}>{cartTotal} TL</span>
+                    </div>
+                  </div>
+                  
+                  <button onClick={handleCheckout} className="btn btn-whatsapp" style={{width: '100%', fontSize: '1.1rem', padding: '1.2rem'}}>
+                    <Phone size={20} style={{marginRight: '8px', verticalAlign: 'text-bottom'}} /> SİPARİŞİ ONAYLA
+                  </button>
+                  <p style={{fontSize: '0.75rem', color: '#999', textAlign: 'center', marginTop: '1rem'}}>
+                    Bilgileriniz 256-bit SSL sertifikası ile korunmaktadır.
+                  </p>
                 </div>
               </div>
             </div>
@@ -800,60 +895,32 @@ function App() {
           
           {cart.length > 0 && (
             <div className="drawer-footer">
-              <div className="cart-total">
+              <div className="cart-total" style={{marginBottom: '0.5rem'}}>
                 <span>Ara Toplam:</span>
-                <span className="text-gold">{cartTotal} TL</span>
+                <span className="text-gold" style={{fontSize: '1.4rem', fontWeight: '700'}}>{cartTotal} TL</span>
+              </div>
+              <div style={{fontSize: '0.85rem', color: '#28a745', marginBottom: '1.5rem', textAlign: 'center', fontWeight: '500', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px'}}>
+                <CheckCircle size={16} /> Kargo Ücretsiz
               </div>
               
-              <div style={{marginTop: '1rem', marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#e9ecef', borderRadius: '4px'}}>
-                <h4 style={{marginBottom: '0.5rem', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-                  <CheckCircle size={16} color="var(--primary)" /> Hızlı Sipariş Formu
-                </h4>
-                <p style={{fontSize: '0.8rem', color: '#666', marginBottom: '1rem'}}>
-                  Aşağıdaki bilgileri doldurun, siparişiniz WhatsApp üzerinden otomatik oluşturulsun.
-                </p>
-                <form onSubmit={handleCheckout}>
-                  <div className="form-group">
-                    <label>Ad Soyad</label>
-                    <input 
-                      type="text" 
-                      name="name" 
-                      required 
-                      className="form-control" 
-                      value={form.name} 
-                      onChange={handleInputChange} 
-                      placeholder="Adınız Soyadınız"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Telefon</label>
-                    <input 
-                      type="tel" 
-                      name="phone" 
-                      required 
-                      className="form-control" 
-                      value={form.phone} 
-                      onChange={handleInputChange} 
-                      placeholder="05XX XXX XX XX"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Açık Adres</label>
-                    <textarea 
-                      name="address" 
-                      required 
-                      className="form-control" 
-                      rows="2" 
-                      value={form.address} 
-                      onChange={handleInputChange} 
-                      placeholder="Mahalle, Sokak, İlçe/İl vb."
-                    ></textarea>
-                  </div>
-                  <button type="submit" className="btn btn-primary" style={{width: '100%', marginTop: '0.5rem'}}>
-                    WhatsApp İle Sipariş Ver
-                  </button>
-                </form>
-              </div>
+              <button 
+                className="btn btn-add-cart" 
+                style={{width: '100%', padding: '1.2rem', marginBottom: '1rem', fontSize: '1.1rem'}}
+                onClick={() => {
+                  setCartOpen(false);
+                  setCurrentView('checkout');
+                  window.scrollTo(0, 0);
+                }}
+              >
+                SİPARİŞİ TAMAMLA
+              </button>
+              
+              <button 
+                onClick={() => setCart([])} 
+                style={{width: '100%', padding: '0.8rem', background: 'none', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', color: '#666'}}
+              >
+                Sepeti Boşalt
+              </button>
             </div>
           )}
         </div>
