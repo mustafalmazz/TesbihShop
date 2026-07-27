@@ -164,7 +164,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [expandedMenu, setExpandedMenu] = useState({});
   const [cart, setCart] = useState([]);
-  const [form, setForm] = useState({ name: '', phone: '', address: '' });
+  const [form, setForm] = useState({ name: '', phone: '', city: '', district: '', zipcode: '', address: '' });
   const [activeTab, setActiveTab] = useState('Çok Satanlar');
   const productSliderRef = useRef(null);
 
@@ -254,8 +254,8 @@ function App() {
       return;
     }
 
-    if (!form.name || !form.phone || !form.address) {
-      alert("Lütfen tüm zorunlu alanları (Ad, Telefon, Adres) eksiksiz doldurunuz.");
+    if (!form.name || !form.phone || !form.city || !form.district || !form.address) {
+      alert("Lütfen tüm zorunlu alanları (Ad, Telefon, İl, İlçe, Adres) eksiksiz doldurunuz.");
       return;
     }
     
@@ -264,6 +264,8 @@ function App() {
     message += `*Alıcı Bilgileri:*%0A`;
     message += `İsim: ${form.name}%0A`;
     message += `Telefon: ${form.phone}%0A`;
+    message += `İl/İlçe: ${form.city} / ${form.district}%0A`;
+    if (form.zipcode) message += `Posta Kodu: ${form.zipcode}%0A`;
     message += `Adres: ${form.address}%0A%0A`;
     
     message += `*Sipariş Detayı:*%0A`;
@@ -421,9 +423,23 @@ function App() {
                 
                 <div className="checkout-card mt-4">
                   <h2 className="checkout-card-title"><MapPin size={20} /> Teslimat Adresi</h2>
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem'}}>
+                    <div className="form-group" style={{marginBottom: 0}}>
+                      <label>İl *</label>
+                      <input type="text" name="city" className="form-control" placeholder="Örn: İstanbul" required value={form.city} onChange={handleInputChange} />
+                    </div>
+                    <div className="form-group" style={{marginBottom: 0}}>
+                      <label>İlçe *</label>
+                      <input type="text" name="district" className="form-control" placeholder="Örn: Kadıköy" required value={form.district} onChange={handleInputChange} />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label>Posta Kodu</label>
+                    <input type="text" name="zipcode" className="form-control" placeholder="Örn: 34000 (İsteğe Bağlı)" value={form.zipcode} onChange={handleInputChange} />
+                  </div>
                   <div className="form-group">
                     <label>Açık Adresiniz *</label>
-                    <textarea name="address" className="form-control" rows="3" placeholder="Mahalle, sokak, bina no, ilçe ve il bilgisi giriniz." required value={form.address} onChange={handleInputChange}></textarea>
+                    <textarea name="address" className="form-control" rows="3" placeholder="Mahalle, sokak, bina no, kat ve daire bilgisi giriniz." required value={form.address} onChange={handleInputChange}></textarea>
                   </div>
                 </div>
                 
